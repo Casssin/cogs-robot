@@ -2,6 +2,7 @@ int trigRightPin = 10;
 int echoRightPin = 11;
 int trigFrontPin = 3;
 int echoFrontPin = 2;
+float alpha = 0.90;
 
 long distRight, distFront; // distance for ultrasonic in cm
 
@@ -16,65 +17,96 @@ void setupMaze() {
 
 
 void wallMaze() {
-    ultrasonic();
-    int turning = 30;
-    if (distRight > 7) {
+    ultrasonicFront();
+    ultrasonicRight();
+    int turning = 10;
+    if (distFront < 15) {
         stop();
+        push(-1);
+        turnLeft(turning);
+    }
+    else if (distRight > 15) {
+        stop();
+        push(1);
         turnRight(turning);
     }
-    else if (distFront < 10) {
-        stop();
-        turnLeft(turning);
+    else if (distRight < 8) {
+      stop();
+      push(-1);
+      turnLeft(turning);
     }
     else {
         stop();
+        push(0);
         forward();
+        delay(5);
     }
     delay(20);
     stop();
 }
 
-void seeWallTurnRight() {
-  ultrasonic();
-//   if (cm < 40) {
-//     stop();
-//     delay(300);
-//     turnRight();
-//     stop();
-//     delay(500);
-//   } 
-//   else {
-//     forward();                            
-//   }
-}
 
-void ultrasonic() {
-    long durationFront, durationRight;
+
+void ultrasonicFront() {
+    long durationFront;
     // The sensor is triggered by a HIGH pulse of 10 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
-  digitalWrite(trigRightPin, LOW);
   digitalWrite(trigFrontPin, LOW);
   delayMicroseconds(5);
-  digitalWrite(trigRightPin, HIGH);
   digitalWrite(trigFrontPin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigRightPin, LOW);
   digitalWrite(trigFrontPin, LOW);
 
   // Read the signal from the sensor: a HIGH pulse whose
   // duration is the time (in microseconds) from the sending
   // of the ping to the reception of its echo off of an object.
-  pinMode(echoRightPin, INPUT);
-  durationRight = pulseIn(echoRightPin, HIGH);
  
 
   pinMode(echoFrontPin, INPUT);
   durationFront = pulseIn(echoFrontPin, HIGH);
 
   // Convert the time into a distance
-  distRight = (durationRight / 2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
+  long old = distFront;
   distFront = (durationFront / 2) / 29.1;
-//   cm = alpha * cm + (1- alpha) * oldCm;
+  if (distFront == 0) {
+    distFront = old;
+  } else {
+    distFront = alpha * distFront + (1- alpha) * old;
+  }
+  
+  delay(2);
+}
+
+void ultrasonicRight() {
+  long durationRight;
+  // The sensor is triggered by a HIGH pulse of 10 or more microseconds.
+  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
+  digitalWrite(trigRightPin, LOW);
+  delayMicroseconds(5);
+  digitalWrite(trigRightPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigRightPin, LOW);
+
+  // Read the signal from the sensor: a HIGH pulse whose
+  // duration is the time (in microseconds) from the sending
+  // of the ping to the reception of its echo off of an object.
+ 
+
+  pinMode(echoRightPin, INPUT);
+  durationRight = pulseIn(echoRightPin, HIGH);
+
+  // Convert the time into a distance
+  long old = distRight;
+  distRight = (durationRight / 2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
+  if (distRight == 0) {
+    distRight = old;
+  } 
+  else if (distRight > 30) {
+    distRight = old;
+  } 
+  else {
+    distRight = alpha * distRight + (1 - alpha) * old;
+  }
   
   Serial.print("Distance right: ");
   Serial.print(distRight);

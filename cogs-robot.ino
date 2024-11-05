@@ -14,7 +14,6 @@ int output = 0;
 int error = 0;
 int range = 277; // How far the ultrasonic is able to detectv
 int setpoint = 30; // 5 centimeter is the set point
-double alpha = 0.2;
  
 int motorAPin_A = 8; //Arduino digital 8 is connected to HG7881's A-1A terminal
 int motorAPin_B = 9; //Arduino digital 9 is connected to HG7881's A-1B terminal
