@@ -5,8 +5,6 @@ int echoFrontPin = 12;
 int trigLeftPin = 3;
 int echoLeftPin = 2;
 float alpha = 0.75;
-int histRight[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int histLeft[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 long distRight, distFront, distLeft; // distance for ultrasonic in cm
 
@@ -25,52 +23,60 @@ void wallMaze() {
     ultrasonicRight();
     ultrasonicLeft();
     int turning = 10;
-    bool seeRight = distRight < 15;
+    int rightBias = 1;
+    int frontBias = 3;
+    int leftBias = 2;
+    bool seeRight = distRight < 13;
     bool seeLeft = distLeft < 15;
-    bool seeFront = distFront < 15;
-    if (distRight < 8) {
-      turnLeft(turning);
-      push(1);
-    }
-    else if (distLeft < 8) {
-      turnRight(turning);
+    bool seeFront = distFront < 20;
+    if (distRight < 6) {
+      turnLeft(turning * leftBias);
+      forward();
+      delay(turning * 4);
       push(-1);
+    }
+    else if (distLeft < 7) {
+      turnRight(turning * rightBias);
+      push(1);
     }
     else if (distFront < 3) {
       backward();
-      delay(turning * 2);
+      delay(turning * frontBias);
     }
-    else if (!seeRight && !seeLeft && !seeFront) {
-      turnRight(turning);
+    if (!seeRight && !seeLeft && !seeFront) {
+      turnRight(turning * rightBias);
       push(1);
     }
     else if (!seeFront && !seeRight && seeLeft) {
-      turnRight(turning);
+      turnRight(turning * rightBias);
       push(1);
     }
     else if (!seeFront && seeRight && !seeLeft) {
       forward();
-      delay(turning * 2);
+      push(0);
+      delay(turning * frontBias);
     }
     else if(!seeFront && seeRight && seeLeft) {
       forward();
-      delay(turning * 2);
+      push(0);
+      delay(turning * frontBias);
     }
     else {
       int dir = historyProb();
       if (dir == 1) {
-        turnRight(turning);
+        turnRight(turning * rightBias);
+        // push(-1);
       }
       else if(dir == 0) {
         forward();
-        delay(turning);
+        delay(turning * frontBias);
       }
       else {
-        turnLeft(turning);
+        turnLeft(turning * leftBias);
+        // push(1);
       }
     }
     delay(20);
-    stop();
 }
 
 
@@ -150,7 +156,7 @@ void ultrasonicRight() {
   long old = distRight;
   distRight = (durationRight / 2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
 
-  if (distRight > 30) {
+  if (distRight > 100) {
     distRight = old;
   } 
   else {
