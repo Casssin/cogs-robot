@@ -1,10 +1,10 @@
 int trigRightPin = 10;
-int echoRightPin = 11;
-int trigFrontPin = 13;
-int echoFrontPin = 12;
+int echoRightPin = A0;
+const int trigFrontPin = 13;
+const int echoFrontPin = 12;
 int trigLeftPin = 3;
 int echoLeftPin = 2;
-float alpha = 0.75;
+const float alpha = 0.75;
 
 long distRight, distFront, distLeft; // distance for ultrasonic in cm
 
@@ -15,27 +15,30 @@ void setupMaze() {
   pinMode(echoRightPin, INPUT);
   pinMode(trigFrontPin, OUTPUT);
   pinMode(echoFrontPin, INPUT);
+  pinMode(trigLeftPin, OUTPUT);
+  pinMode(echoLeftPin, INPUT);
 }
 
 
 void wallMaze() {
+  stop();
     ultrasonicFront();
     ultrasonicRight();
     ultrasonicLeft();
-    int turning = 10;
-    int rightBias = 1;
-    int frontBias = 3;
-    int leftBias = 2;
-    bool seeRight = distRight < 13;
-    bool seeLeft = distLeft < 15;
-    bool seeFront = distFront < 20;
+    int turning = 12;
+    float rightBias = 0.25;
+    int frontBias = 2;
+    float leftBias = 0.5;
+    bool seeRight = distRight < 12;
+    bool seeLeft = distLeft < 14;
+    bool seeFront = distFront < 9;
     if (distRight < 6) {
       turnLeft(turning * leftBias);
-      forward();
-      delay(turning * 4);
       push(-1);
     }
-    else if (distLeft < 7) {
+    else if (distLeft < 5) {
+      forward();
+      delay(turning * frontBias);
       turnRight(turning * rightBias);
       push(1);
     }
@@ -44,10 +47,14 @@ void wallMaze() {
       delay(turning * frontBias);
     }
     if (!seeRight && !seeLeft && !seeFront) {
+      forward();
+      delay(turning * frontBias);
       turnRight(turning * rightBias);
       push(1);
     }
     else if (!seeFront && !seeRight && seeLeft) {
+      forward();
+      delay(turning * frontBias);
       turnRight(turning * rightBias);
       push(1);
     }
@@ -64,6 +71,8 @@ void wallMaze() {
     else {
       int dir = historyProb();
       if (dir == 1) {
+      forward();
+      delay(turning * frontBias);
         turnRight(turning * rightBias);
         // push(-1);
       }
@@ -177,3 +186,4 @@ void ultrasonicRight() {
 int invertOurValue(int input) {
   return 255 - input;
 }
+

@@ -42,12 +42,13 @@ void setup(){
   //Serial Port begin
   Serial.begin (9600);
   setupMaze();
-
-
+  setupPaper();
 }
 
 void loop() {
-  wallMaze();
+  // wallMaze();
+  // paper();
+  tapeMaze();
 }
 
 
@@ -86,14 +87,14 @@ void turnLeft(int degrees) {
 
   // Motor B backward
   digitalWrite(motorBPin_A, LOW);
-  analogWrite(motorBPin_B, 255-turningSpeed);
+  analogWrite(motorBPin_B, 255 - turningSpeed);
   delay(degrees * degreeToMS);
 }
 
 void turnRight(int degrees) {
   // Motor A backward
   digitalWrite(motorAPin_A, LOW);
-  analogWrite(motorAPin_B, 255-turningSpeed);
+  analogWrite(motorAPin_B, 255 - turningSpeed);
 
   // Motor B forward
   digitalWrite(motorBPin_A, HIGH);
