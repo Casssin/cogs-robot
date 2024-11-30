@@ -10,11 +10,12 @@ void tapeMaze() {
   Serial.print(analogRead(centerPhotoPin));
   Serial.print(" Right: ");
   Serial.println(analogRead(rightPhotoPin));
+  stop();
   bool leftVal = seeWhiteLeft(analogRead(leftPhotoPin));
   bool rightVal = seeWhiteRight(analogRead(rightPhotoPin));
   bool centerVal = seeWhiteCenter(analogRead(centerPhotoPin));
-  int turning = 3;
-  float forwardBias = 1;
+  int turning = 5;
+  float forwardBias = 1.5;
 
   // Only center sees white, move forward
   if (centerVal && !leftVal && !rightVal) {
@@ -88,11 +89,11 @@ int historyProb() {
 }
 
 bool seeWhiteCenter(int value) {
-  return value >= 19;       // arbitrary value need to test
+  return value >= 16;       // arbitrary value need to test
 }
 
 bool seeWhiteLeft(int value) {
-  return value >= 34;       // arbitrary value need to test
+  return value >= 46;       // arbitrary value need to test
 }
 
 bool seeWhiteRight(int value) {
