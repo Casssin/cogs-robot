@@ -103,10 +103,10 @@ void ultrasonicFrontLeft() {
   distFrontLeft = (durationLeft / 2) / 29.1;
   distFrontLeft = alphaNew * distFrontLeft + (1- alphaNew) * old;
   
-//   Serial.print("Front Right: ");
-//   Serial.print(distFrontRight);
-//   Serial.print(" , Front Left: ");
-//   Serial.println(distFrontLeft);
+  Serial.print("Front Right: ");
+  Serial.print(distFrontRight);
+  Serial.print(" , Front Left: ");
+  Serial.println(distFrontLeft);
   
   delay(2);
 }

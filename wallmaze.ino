@@ -25,7 +25,7 @@ void wallMaze() {
     ultrasonicFront();
     ultrasonicRight();
     ultrasonicLeft();
-    int turning = 12;
+    int turning = 24;
     float rightBias = 0.25;
     int frontBias = 2;
     float leftBias = 0.5;

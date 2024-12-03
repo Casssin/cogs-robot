@@ -14,8 +14,8 @@ void tapeMaze() {
   bool leftVal = seeWhiteLeft(analogRead(leftPhotoPin));
   bool rightVal = seeWhiteRight(analogRead(rightPhotoPin));
   bool centerVal = seeWhiteCenter(analogRead(centerPhotoPin));
-  int turning = 5;
-  float forwardBias = 1.5;
+  int turning = 8;
+  float forwardBias = 1;
 
   // Only center sees white, move forward
   if (centerVal && !leftVal && !rightVal) {
@@ -89,13 +89,13 @@ int historyProb() {
 }
 
 bool seeWhiteCenter(int value) {
-  return value >= 16;       // arbitrary value need to test
+  return value >= 30;       // arbitrary value need to test
 }
 
 bool seeWhiteLeft(int value) {
-  return value >= 46;       // arbitrary value need to test
+  return value >= 55;       // arbitrary value need to test
 }
 
 bool seeWhiteRight(int value) {
-  return value >= 28;       // arbitrary value need to test
+  return value >= 23;       // arbitrary value need to test
 }

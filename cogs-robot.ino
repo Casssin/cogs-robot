@@ -24,7 +24,9 @@ int motorBPin_B = 5; //Arduino digital 5 is connected to HG7881's B-1B terminal
 int speed = 150;    // speed of bot
 int backSpeed = 255 - speed;
 int turningSpeed = 100;
+int mode = 0;
 
+const int modePhoto = A1;
 
 const double degreeToMS = 3.6;
 
@@ -46,9 +48,30 @@ void setup(){
 }
 
 void loop() {
-  // wallMaze();
-  // paper();
-  tapeMaze();
+  modeChange();
+  if (mode == 0) {
+    tapeMaze();
+  }
+  else if (mode == 1) {
+    paper();
+  }
+  else {
+    wallMaze();
+  }
+}
+
+void modeChange() {
+  int photo = analogRead(modePhoto);
+  Serial.print(" Photo value " );
+  Serial.print(photo);
+  Serial.print(" ");
+  if (photo >= 700) {
+    mode++;
+    delay(1000);
+  }
+  if (mode >= 3) {
+    mode = 0;
+  }
 }
 
 
